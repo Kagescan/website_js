@@ -2,7 +2,7 @@
 
 The Kagescan project is first and foremost a website born from a well-defined philosophy. However, the project has gradually lost its mentality and since 2019, there has been no real development activity.
 
-A total redesign of the site is therefore planned for the 5 years of the project (February 14, 2020) with the following objectives:
+A total redesign of the site is therefore planned for the 5th anniversary of this project (February 14, 2020) with the following objectives:
 
 - A minimal but very fast website (effort to make as few requests as possible at the client level, SPA or serverless concepts are counterexamples)
 - A low cost deployable php website (suitable for a free shared hosting), maintainable by small groups of fans
