@@ -9,7 +9,7 @@ class About extends Controller
 	*/
 	public function index()
 	{
-		return view('welcome_message');
+		self::view();
 	}
 
 	/**
