@@ -22,7 +22,7 @@ $routes->setDefaultController('Home');
 $routes->setDefaultMethod('index');
 $routes->setTranslateURIDashes(false);
 $routes->set404Override();
-$routes->setAutoRoute(true);
+$routes->setAutoRoute(false);
 
 /*
  * --------------------------------------------------------------------
@@ -33,6 +33,9 @@ $routes->setAutoRoute(true);
 // We get a performance increase by specifying the default
 // route since we don't have to scan directories.
 $routes->get('/', 'Home::index');
+
+$routes->get('/about/', 'About::index/a');
+$routes->get('/about/(:any)', 'About::view/$1');
 
 /*
  * --------------------------------------------------------------------
