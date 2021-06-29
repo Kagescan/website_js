@@ -34,9 +34,10 @@ $routes->setAutoRoute(false);
 // route since we don't have to scan directories.
 $routes->get('/', 'Home::index');
 
+$routes->get('blog/(:segment)', 'Article::view/$1');
+$routes->get('blog', 'Article::index');
 $routes->get('/about/', 'About::index/a');
 $routes->get('/about/(:any)', 'About::view/$1');
-
 /*
  * --------------------------------------------------------------------
  * Additional Routing
