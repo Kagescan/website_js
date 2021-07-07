@@ -13,11 +13,11 @@
 		xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd">
 	<coverage includeUncoveredFiles="true" processUncoveredFiles="true">
 		<include>
-			<directory suffix=".php">./app</directory>
+			<directory suffix=".php">./App</directory>
 		</include>
 		<exclude>
-			<directory suffix=".php">./app/Views</directory>
-			<file>./app/Config/Routes.php</file>
+			<directory suffix=".php">./App/Views</directory>
+			<file>./App/Config/Routes.php</file>
 		</exclude>
 		<report>
 			<clover outputFile="build/logs/clover.xml"/>
@@ -37,11 +37,11 @@
 		<junit outputFile="build/logs/logfile.xml"/>
 	</logging>
 	<php>
-		<server name="app.baseURL" value="http://example.com/"/>
+		<server name="App.baseURL" value="http://example.com/"/>
 		<!-- Directory containing phpunit.xml -->
 		<const name="HOMEPATH" value="./"/>
 		<!-- Directory containing the Paths config file -->
-		<const name="CONFIGPATH" value="./app/Config/"/>
+		<const name="CONFIGPATH" value="./App/Config/"/>
 		<!-- Directory containing the front controller (index.php) -->
 		<const name="PUBLICPATH" value="./public/"/>
 		<!-- Database configuration -->
