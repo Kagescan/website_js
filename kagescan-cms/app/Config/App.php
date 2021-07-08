@@ -461,5 +461,5 @@ class App extends BaseConfig
 	 *
 	 * @var boolean
 	 */
-	public $CSPEnabled = true;
+	public $CSPEnabled = false; // todo : true
 }
