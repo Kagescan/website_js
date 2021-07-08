@@ -17,7 +17,7 @@ Any help is appreciated, contact <logan@kagescan.fr> for more information
 We are using the CodeIgniter 4 framework. It have been installed without composer so all you have to do is ...
 
 * Having php 8.0 or above (required is php 7.2 but I'll prob. try php8.0 features)
-* Activating the following extensions : `intl`, `mbstring`
+* Activating the following extensions : `intl`, `mbstring`, `GD`
 * Following the steps below.
 
 ## Local dev.

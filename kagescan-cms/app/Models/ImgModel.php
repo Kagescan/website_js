@@ -13,7 +13,7 @@ use CodeIgniter\Model;
 /**
  *
  */
-class ImageModel extends Model
+class ImgModel extends Model
 {
 	/*
 	DROP TABLE `images`;
