@@ -18,10 +18,10 @@ class Img extends Controller
 
 		$model = new ImageModel();
 		$data["images"] = $model->getImage();
-		$data["title"] = "Uploaded images";
+		$data["title"] = "All uploaded medias";
 
 		echo view('templates/header', $data);
-		echo view('templates/img', $data);
+		echo view('img/all', $data);
 		echo view('templates/footer', $data);
 	}
 
