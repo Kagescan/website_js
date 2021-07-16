@@ -14,9 +14,9 @@ class ImgController extends Controller
 	*/
 	public function index()
 	{
-		echo view('templates/header', [title=>"name"]);
+		echo view('templates/header', ["title"=>"Image upload"]);
 		echo "tba";
-		echo view('templates/footer', [title=>"name"]);
+		echo view('templates/footer', ["title"=>"name"]);
 	}
 
 	/**
