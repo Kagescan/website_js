@@ -1,12 +1,13 @@
 <?php
-namespace App\Controllers;
+namespace App\Controllers\Img;
 
 use App\Models\ImgModel;
 use CodeIgniter\Controller;
 
-class ImgController extends Controller
+class Img extends Controller
 {
 	private static string $IMAGE_FOLDER = WRITEPATH."images";
+	private static string $SVG_MIME = 'image/svg+xml';
 	private static array $ALLOWED_MIMES = ['image/png', 'image/jpeg', 'image/gif', 'image/svg+xml'];
 
 	/**
@@ -14,9 +15,23 @@ class ImgController extends Controller
 	*/
 	public function index()
 	{
+		$this->error("Not implemented", "this feature is still not implemented.");
 		echo view('templates/header', ["title"=>"Image upload"]);
 		echo "tba";
 		echo view('templates/footer', ["title"=>"name"]);
+	}
+
+	/**
+	* Prints an error as svg image.
+	*/
+	public function error($title = "404 error", $description = "File not found.") {
+		$data = ["title"=>$title, "description"=>$description];
+
+		$this->response->setContentType(self::$SVG_MIME);
+		//$this->response->setStatusCode(404);
+		echo view("errors/svg", $data);
+		$this->response->send();
+		die();
 	}
 
 	/**
@@ -34,7 +49,8 @@ class ImgController extends Controller
 		if ($thumb) $filename .= "thumb_";
 		$filename .= $image["file_path"];
 		if ( ! file_exists($filename)) {
-			throw new \CodeIgniter\Exceptions\PageNotFoundException("The image [$name] is registered in the database, but physically unavailable in the storage. This should not happen !");
+			$this->error("Not found", "The image [$name] is registered in the database, but physically unavailable in the storage. This should not happen !");
+			//throw new \CodeIgniter\Exceptions\PageNotFoundException();
 		}
 
 		$mime = mime_content_type($filename); // todo (security) : should I trust this ?
