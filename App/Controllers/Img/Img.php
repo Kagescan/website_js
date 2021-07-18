@@ -24,8 +24,8 @@ class Img extends Controller
 	/**
 	* Prints an error as svg image.
 	*/
-	public function error($title = "404 error", $description = "File not found.") {
-		$data = ["title"=>$title, "description"=>$description];
+    public function error($text = "File not found.", $error="404", $title = "Not found") {
+		$data = ["error"=>$error, "title"=>$title, "text"=>$text];
 
 		$this->response->setContentType(self::$SVG_MIME);
 		//$this->response->setStatusCode(404);
@@ -42,20 +42,20 @@ class Img extends Controller
 		$model = new ImgModel();
 		$image = $model->getImage($name);
 		if (empty($image)) {
-			throw new \CodeIgniter\Exceptions\PageNotFoundException("Cannot find in the database the following image: $name.");
+            $this->error("Cannot find in the database the following image: $name.");
 		}
 		// todo : (secutity) path traversal + correct filename
 		$filename = self::$IMAGE_FOLDER;
 		if ($thumb) $filename .= "thumb_";
 		$filename .= $image["file_path"];
 		if ( ! file_exists($filename)) {
-			$this->error("Not found", "The image [$name] is registered in the database, but physically unavailable in the storage. This should not happen !");
+            $this->error("The image [$name] is registered in the database, but physically unavailable in the storage. This should not happen !");
 			//throw new \CodeIgniter\Exceptions\PageNotFoundException();
 		}
 
 		$mime = mime_content_type($filename); // todo (security) : should I trust this ?
-		if (! in_array($mime, self::$ALLOWED_MIMES)) {
-			throw new \CodeIgniter\Exceptions\PageNotFoundException("This file type ($mime) is not allowed. This should not happen, this file might have been corrupted.");
+        if (! in_array($mime, self::$ALLOWED_MIMES) || true) {
+            $this->error("This file type ($mime) is not allowed. This should not happen, this file might have been corrupted.", "403", "Image not allowed");
 		}
 		header('Content-Length: '.filesize($filename));
 		header("Content-Type: $mime");
