@@ -6,6 +6,7 @@
     <style>
         body {
             font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            padding: 5em 20%;
         }
     </style>
 </head>

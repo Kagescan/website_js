@@ -15,16 +15,23 @@ class Img extends Controller
 	*/
 	public function index()
 	{
-		$this->error("Not implemented", "this feature is still not implemented.");
+
 		echo view('templates/header', ["title"=>"Image upload"]);
-		echo "tba";
+		$PREFIX = "Img/Img/";
+		echo "doc :<br>- ";
+		echo anchor($PREFIX.'error', 'test default error')."<br> - ";
+		echo anchor($PREFIX.'view/redbeansoup', 'View image redbeansoup')."<br> - ";
+		echo anchor($PREFIX.'thumb/redbeansoup', 'Thumb test')."<br> - ";
+		echo anchor($PREFIX.'all/', 'Thumb test')."<br> - ";
+		echo anchor($PREFIX.'upload/', 'Thumb test')."<br> - ";
+
 		echo view('templates/footer', ["title"=>"name"]);
 	}
 
 	/**
 	* Prints an error as svg image.
 	*/
-    public function error($text = "File not found.", $error="404", $title = "Not found") {
+	public function error($text = "File not found.", $error="404", $title = "Not found") {
 		$data = ["error"=>$error, "title"=>$title, "text"=>$text];
 
 		$this->response->setContentType(self::$SVG_MIME);
@@ -35,27 +42,27 @@ class Img extends Controller
 	}
 
 	/**
-	 * Displays the image (or a special page)
-	 * Route : /img/{name}
-	 */
+	* Displays the image (or a special page)
+	* Route : /img/{name}
+	*/
 	public function view($name, $thumb=false) {
 		$model = new ImgModel();
 		$image = $model->getImage($name);
 		if (empty($image)) {
-            $this->error("Cannot find in the database the following image: $name.");
+			$this->error("Cannot find in the database the following image: $name.");
 		}
 		// todo : (secutity) path traversal + correct filename
-		$filename = self::$IMAGE_FOLDER;
+		$filename = self::$IMAGE_FOLDER."/";
 		if ($thumb) $filename .= "thumb_";
 		$filename .= $image["file_path"];
 		if ( ! file_exists($filename)) {
-            $this->error("The image [$name] is registered in the database, but physically unavailable in the storage. This should not happen !");
+			$this->error("The image [$name] is registered in the database, but physically unavailable in the storage ($filename). This should not happen !");
 			//throw new \CodeIgniter\Exceptions\PageNotFoundException();
 		}
 
-		$mime = mime_content_type($filename); // todo (security) : should I trust this ?
-        if (! in_array($mime, self::$ALLOWED_MIMES) || true) {
-            $this->error("This file type ($mime) is not allowed. This should not happen, this file might have been corrupted.", "403", "Image not allowed");
+		$mime = mime_content_type($filename);
+		if (! in_array($mime, self::$ALLOWED_MIMES)) {
+			$this->error("This file type ($mime) is not allowed. This should not happen, this file might have been corrupted.", "403", "Image not allowed");
 		}
 		header('Content-Length: '.filesize($filename));
 		header("Content-Type: $mime");
@@ -70,19 +77,19 @@ class Img extends Controller
 	}
 
 	/**
-	 * Upload page
-	 * Route : /img/upload/
-	 */
+	* Upload page
+	* Route : /img/upload/
+	*/
 	public function upload() {
 		$model = new ImgModel();
 
 		if ($this->request->getMethod() !== 'post' || ! $this->validate([
-				'image'  => 'uploaded[image]|max_size[image,2048]|mime_in[image,'.implode(",", self::$ALLOWED_MIMES).']',
-				'name' => 'max_length[255]',
-				'alt' => 'max_length[255]',
-				'description' => 'max_length[65535]',
-				'upload_comment' => 'max_length[255]'
-			])
+			'image'  => 'uploaded[image]|max_size[image,2048]|mime_in[image,'.implode(",", self::$ALLOWED_MIMES).']',
+			'name' => 'max_length[255]',
+			'alt' => 'max_length[255]',
+			'description' => 'max_length[65535]',
+			'upload_comment' => 'max_length[255]'
+		])
 		)
 		{
 			echo view('templates/header', ['title' => 'Upload image']);
@@ -97,9 +104,9 @@ class Img extends Controller
 		$fullPath = $file->move(self::$IMAGE_FOLDER, $newFileName);
 
 		\Config\Services::image()
-			->withFile(self::$IMAGE_FOLDER."/".$newFileName)
-			->fit(100, 100, 'top')
-			->save(self::$IMAGE_FOLDER."/thumb_".$newFileName);
+		->withFile(self::$IMAGE_FOLDER."/".$newFileName)
+		->fit(100, 100, 'top')
+		->save(self::$IMAGE_FOLDER."/thumb_".$newFileName);
 		$imageIdentifier = url_title($this->request->getPost('name') | $file->getName(), '-', TRUE);
 		$model->save([
 			'file_path' => $newFileName,
