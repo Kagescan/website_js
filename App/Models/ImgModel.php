@@ -74,7 +74,7 @@ class ImgModel extends Model
 	// public function createImage -> use this->save([]) function
 
 	public function deleteImage($name) {
-
+		return $this->where(['name'=>$name])->delete();
 	}
 
 	/**

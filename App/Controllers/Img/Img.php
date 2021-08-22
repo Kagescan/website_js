@@ -12,6 +12,7 @@ use CodeIgniter\Controller;
 class Img extends Controller
 {
 	private static string $IMAGE_FOLDER = WRITEPATH."images";
+	private static string $TRASH_FOLDER = WRITEPATH."trash";
 	private static string $SVG_MIME = 'image/svg+xml';
 	private static array $ALLOWED_MIMES = ["png" =>'image/png', "jpeg" => 'image/jpeg', "gif" => 'image/gif', "webp" => 'image/webp', "svg" => 'image/svg+xml'];
 	private static string $HOME_URL = "/Img/Img/";
@@ -31,14 +32,14 @@ class Img extends Controller
 	 */
 	public function index()
 	{
-		$lf = "<br> -";
+		$lf = "<br> - ";
 		$this->render("Image upload - API ref",
 			"Supported URLs : <br> - ".
-			anchor(self::$HOME_URL.'error', 'test default error').$lf.
-			anchor(self::$HOME_URL.'view/redbeansoup', 'View image redbeansoup').$lf.
-			anchor(self::$HOME_URL.'thumb/redbeansoup', 'Thumb test').$lf.
-			anchor(self::$HOME_URL.'all', 'see all').$lf.
+			anchor(self::$HOME_URL.'all', 'All images (+ delete)').$lf.
 			anchor(self::$HOME_URL.'upload', 'upload')." - & ".anchor(self::$HOME_URL.'success', 'success').$lf.
+			anchor(self::$HOME_URL.'error', 'test default svg error').$lf.
+			anchor(self::$HOME_URL.'view/redbeansoup', 'View image redbeansoup')." + ".
+			anchor(self::$HOME_URL.'thumb/redbeansoup', 'Thumb').$lf.
 			"maybe in the future : image renaming<br>"
 		);
 	}
@@ -61,7 +62,14 @@ class Img extends Controller
 	 * Shows all stored images.
 	 * @Route Img/all
 	 */
-	public function all() {
+	public function all($successMsg = "none") {
+		switch ($successMsg) {
+			case "deleteSuccess":
+				$data["successMsg"] = "Image deleted successfully";
+				break;
+			default:
+				break;
+		}
 		$model = new ImgModel();
 		$data["images"] = $model->getImage();
 		$data["title"] = "All uploaded medias";
@@ -83,6 +91,29 @@ class Img extends Controller
 		echo view("img/error", $data);
 		$this->response->send();
 		die();
+	}
+
+	/**
+	 * Moves an image to the trash.
+	 * @Route Img/delete/{name}
+	 * @param string $name The image identifier
+	 */
+	public function delete($name = '>') {
+		$model = new ImgModel();
+		$image = $model->getImage($name);
+		$imageDontExists = empty($image);
+		if ($this->request->getMethod() !== 'post' || ! $this->validate(["confirm"=>"max_length[255]"]) || $imageDontExists)
+		{
+			$this->render("Confirm delete",
+				$this->parser
+					->setData(["src"=>$name, "backURL" => self::$HOME_URL, "imageDontExists" =>$imageDontExists])
+					->render('img/confirmDelete')
+			);
+			exit();
+		}
+		$this->moveImageToTrash($image["file_path"]);
+		$model->deleteImage($name);
+		$this->response->redirect("../all/deleteSuccess", 'auto', 303);
 	}
 
 	// ---- Image display methods
@@ -173,6 +204,7 @@ class Img extends Controller
 		$userFilename = url_title((empty($userFilename)) ? $file->getName() : $userFilename);
 		$serverFileName = $file->getRandomName();
 
+		$this->createFolderIfDontExist(self::$IMAGE_FOLDER);
 		$file->move(self::$IMAGE_FOLDER, $serverFileName);
 
 		\Config\Services::image()
@@ -203,5 +235,31 @@ class Img extends Controller
 		echo $this->parser->setData(["title"=>$title])->render('templates/header');
 		echo $injectedHTML;
 		echo $this->parser->setData(["title"=>$title])->render('templates/footer');
+	}
+
+	/**
+	 * Self explanatory. If the folder provided don't exist, creates it with ugo=rwx permissions.
+	 * @param $folder String the absolute folder path
+	 */
+	private function createFolderIfDontExist($folder) {
+		if(!is_dir($folder) )
+		{
+			mkdir($folder,0777,TRUE);
+		}
+	}
+
+	/**
+	 * Given the image file path, moves it to the trash folder.
+	 * @param $filePath String the absolute file path
+	 */
+	private function moveImageToTrash($filePath) {
+		$prefix = self::$IMAGE_FOLDER.DIRECTORY_SEPARATOR;
+		$thumbInstance = new \CodeIgniter\Files\File($prefix.'thumb_'.$filePath);
+		$imageInstance = new \CodeIgniter\Files\File($prefix.$filePath);
+
+		$trashPrefix = self::$TRASH_FOLDER.DIRECTORY_SEPARATOR;
+		$this->createFolderIfDontExist(self::$TRASH_FOLDER);
+		$thumbInstance->move($trashPrefix);
+		$imageInstance->move($trashPrefix);
 	}
 }

@@ -20,6 +20,9 @@
         img.noOverflow {
             max-width: 100%;
         }
+        .mono {
+            font-family: monospace;
+        }
     </style>
   </body>
 </html>

@@ -4,7 +4,7 @@
 
 <p>This is a basic upload feature, that supports actually only one image.</p>
 
-<p>It's possible to override an image</p>
+<p>Image overriding/history is still not available.</p>
 
 <form action="<?=$backURL?>upload" method="POST"  enctype="multipart/form-data">
     <?= csrf_field() ?>
