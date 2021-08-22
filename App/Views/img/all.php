@@ -26,20 +26,28 @@
         color: white;
     }
 </style>
-
+    <p><a href="<?=$backURL?>">Back</a></p>
     <table id="table">
+        <caption>All images uploaded at this site.</caption>
         <thead>
             <tr>
-                <th>Name</th><th>Preview</th><th>Description</th><th>Last edited</th>
+                <th scope="col">Name</th>
+                <th scope="col">Description</th>
+                <th scope="col">Last edited</th>
+                <th scope="col">Thumb</th>
             </tr>
         </thead>
         <tbody>
         <?php foreach ($images as $image): ?>
             <tr>
                 <td><?= esc($image['name']) ?></td>
-                <td><img src="view/<?=esc($image['name'], "url")?>" alt="<?=esc($image['alt'], "attr")?>"></td>
                 <td><?= esc($image['description']) ?></td>
                 <td><?= esc($image['created_at']) ?></td>
+                <td>
+                    <a href="./view/<?=esc($image['name'], "url")?>" title="click to see full">
+                        <img src="./thumb/<?=esc($image['name'], "url")?>" alt="<?=esc($image['alt'], "attr")?>">
+                    </a>
+                </td>
             </tr>
         <?php endforeach; ?>
         </tbody>
@@ -51,5 +59,6 @@
 
     <p>Unable to find any images for you.</p>
 
+    <p><a href="<?=$backURL?>">Back</a></p>
 <?php endif ?>
 </main>
