@@ -1,0 +1,4 @@
+
+RedirectMatch 403 ^/.git/?$
+RedirectMatch 403 ^/trash/?$
+RedirectMatch 403 ^/src/?$
