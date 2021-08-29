@@ -1,4 +1,7 @@
-# Kagescan.fr (v2) source code
+# Kagescan-cms
+*(aka. Kagescan.fr (v2) upcoming source code)*
+
+<br/>
 
 The Kagescan project is first and foremost a website born from a well-defined philosophy. However, the project has gradually lost its mentality and since 2019, there has been no real development activity.
 
@@ -8,6 +11,7 @@ A total redesign of the site is therefore planned for the 5th anniversary of thi
 - A low cost deployable php website (suitable for a free shared hosting), maintainable by small groups of fans
 - Tools to create, organize and publish translations of all kinds (manga pages as well as light novel texts)
 - More recently, a will to respect privacy (going beyond a legal site by using as few cookies as possible and not relying on third party tools such as AddThis or Google Analytics) and the ability to localize the website's content
+- Creating standalone features so you can use some portions of our website to your own project
 
 Currently, we are doing some upstream work for the realization of this new project, including self-training to make a rigorously stable and secure site.  
 Any help is appreciated, contact <logan@kagescan.fr> for more information
@@ -30,7 +34,7 @@ Fun fact : In contrary, the first version of kagescan have been developed mainly
 
 CodeIgniter provides a complete documentation page about [how to run the app](https://codeigniter.com/user_guide/installation/running.html), but here is a short summary :
 
-<table> <th> <td>Run using a local server</td><td>Run from a remote apache server</td> </th> <tr>
+<table> <tr> <th>Run using a local server</th><th>Run from a remote apache server</th> </tr>    <tr>
 <td>
 
 * Copy the `sample.env` to `.env` and edit it to configure the App. Keep that file secret !
